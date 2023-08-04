@@ -154,7 +154,14 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        int size = b.size();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (b.tile(i, j) != null && b.tile(i, j).value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -165,10 +172,47 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        } else {
+            int size = b.size();
+            for (int col = 0; col < size; col++) {
+                for (int row = 0; row < size; row++) {
+                    if (adjacentSameValue(b, col, row)) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
+    /** Returns true if there is any adjacent with same value */
+    public static boolean adjacentSameValue(Board b, int col, int row) {
+        int size = b.size();
+        int value = b.tile(col, row).value();
+        if (row < size - 1) {
+            if (b.tile(col, row + 1).value() == value) {
+                return true;
+            }
+        }
+        if (row != 0) {
+            if (b.tile(col, row - 1).value() == value) {
+                return true;
+            }
+        }
+        if (col < size - 1) {
+            if (b.tile(col + 1, row).value() == value) {
+                return true;
+            }
+        }
+        if (col != 0) {
+            if (b.tile(col - 1, row).value() == value) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
      /** Returns the model as a string, used for debugging. */
