@@ -1,5 +1,6 @@
 package game2048;
 
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Observable;
 
@@ -116,25 +117,40 @@ public class Model extends Observable {
 
         int size = board.size();
 
+        board.setViewingPerspective(side);
+
         for (int col = 0; col < size; col++) {
+            boolean[] merged = new boolean[size];
             for (int row = size - 2; row >= 0; row--) {
                 Tile current = board.tile(col, row);
                 Tile above = board.tile(col, row + 1);
                 if (current != null) {
                     if (above == null) {
-                        if (board.move(col, numberOfSteps(board, col, row), current)) {
-                            score += current.value() * 2;
+                        int nextRow = numberOfSteps(board, col, row);
+                        if (!merged[nextRow]) {
+                            if (board.move(col, nextRow, current)) {
+                                merged[nextRow] = true;
+                                score += current.value() * 2;
+                            }
+                        } else {
+                            board.move(col, nextRow - 1, current);
                         }
                         changed = true;
                     } else {
-                        if (board.move(col, row + 1, current)) {
-                            score += current.value() * 2;
-                            changed = true;
+                        if (current.value() == above.value()) {
+                            if (!merged[row + 1]) {
+                                board.move(col, row + 1, current);
+                                score += current.value() * 2;
+                                merged[row + 1] = true;
+                                changed = true;
+                            }
                         }
                     }
                 }
             }
         }
+
+        board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
         if (changed) {
