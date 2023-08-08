@@ -119,13 +119,19 @@ public class Model extends Observable {
         for (int col = 0; col < size; col++) {
             for (int row = size - 2; row >= 0; row--) {
                 Tile current = board.tile(col, row);
-                Tile aboveCurrent = board.tile(col, row + 1);
-                if (current != null && aboveCurrent != null) {
-                    if (current.value() == aboveCurrent.value()) {
-                        board.move(col, row + 1, current);
+                Tile above = board.tile(col, row + 1);
+                if (current != null) {
+                    if (above == null) {
+                        if (board.move(col, numberOfSteps(board, col, row), current)) {
+                            score += current.value() * 2;
+                        }
+                        changed = true;
+                    } else {
+                        if (board.move(col, row + 1, current)) {
+                            score += current.value() * 2;
+                            changed = true;
+                        }
                     }
-                } else if (current != null) {
-                    board.move(col, numberOfSteps(board, col, row), current);
                 }
             }
         }
@@ -138,10 +144,19 @@ public class Model extends Observable {
     }
 
     public static int numberOfSteps(Board b, int col, int row) {
-        while (row < b.size() && b.tile(col, row + 1) == null) {
-            row++;
+        int changedRow = row;
+        while (changedRow < b.size() - 1) {
+            if (b.tile(col, changedRow + 1) == null) {
+                changedRow++;
+            } else {
+                if (b.tile(col, row).value() == b.tile(col, changedRow + 1).value()) {
+                    return changedRow + 1;
+                } else {
+                    return changedRow;
+                }
+            }
         }
-        return row;
+        return changedRow;
     }
 
     /** Checks if the game is over and sets the gameOver variable
