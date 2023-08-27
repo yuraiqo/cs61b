@@ -72,6 +72,7 @@ public class LinkedListDeque<T> {
         TypeNode first = sentinel.next;
         sentinel.next = sentinel.next.next;
         sentinel.next.prev = sentinel;
+        size -= 1;
         return first.item;
     }
 
@@ -83,6 +84,7 @@ public class LinkedListDeque<T> {
         TypeNode last = sentinel.prev;
         sentinel.prev = sentinel.prev.prev;
         sentinel.prev.next = sentinel;
+        size -= 1;
         return last.item;
     }
 
@@ -119,9 +121,6 @@ public class LinkedListDeque<T> {
 
     public static void main(String[] args) {
         LinkedListDeque<Integer> list = new LinkedListDeque<>();
-        list.addFirst(1);
-        list.addLast(2);
-        list.addLast(3);
-        list.printDeque();
+        System.out.println(list.size());
     }
 }
