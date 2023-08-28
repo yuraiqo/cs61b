@@ -118,9 +118,4 @@ public class LinkedListDeque<T> {
             return null;
         }
     }
-
-    public static void main(String[] args) {
-        LinkedListDeque<Integer> list = new LinkedListDeque<>();
-        System.out.println(list.size());
-    }
 }
