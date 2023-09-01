@@ -1,5 +1,7 @@
 package deque;
 
+import java.util.Arrays;
+
 public class ArrayDeque<T> {
 
     private T[] items = (T[]) new Object[8];
@@ -13,9 +15,28 @@ public class ArrayDeque<T> {
         first = last = -1;
     }
 
+    /** Creates ArrayDeque. */
+    public ArrayDeque(T item) {
+        size = 1;
+        first = last = 0;
+        items[first] = item;
+    }
+
+    /** Resizes ArrayDeque if it's full */
     public void resize() {
         if (size == items.length) {
-            return;
+            T[] newItems = (T[]) new Object[size * 2];
+            int i = first;
+            int newIndex = size / 2 - 1;
+            while (i != last) {
+                newItems[newIndex] = items[i];
+                i = (i + 1) % items.length;
+                newIndex += 1;
+            }
+            newItems[newIndex] = items[i];
+            first = size / 2 - 1;
+            last = first + (size - 1);
+            items = newItems;
         }
     }
 
@@ -32,7 +53,7 @@ public class ArrayDeque<T> {
             first -= 1;
             items[first] = item;
         }
-
+        size += 1;
     }
 
     /** Adds item to end of ArrayDeque. */
@@ -48,6 +69,7 @@ public class ArrayDeque<T> {
             last += 1;
             items[last] = item;
         }
+        size += 1;
     }
 
     /** Returns true if ArrayDeque is empty, otherwise returns false. */
@@ -98,12 +120,10 @@ public class ArrayDeque<T> {
     }
 
     public static void main(String[] args) {
-        ArrayDeque<Integer> list = new ArrayDeque<>();
-        list.addFirst(5);
+        ArrayDeque<Integer> list = new ArrayDeque<>(5);
         list.addFirst(1);
-        list.addFirst(3);
-        list.addLast(9);
-        list.addFirst(10);
+        list.addLast(4);
+        list.addLast(11);
         list.printDeque();
     }
 }
