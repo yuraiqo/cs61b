@@ -95,18 +95,31 @@ public class ArrayDeque<T> {
 
     /** Removes first item in ArrayDeque. */
     public T removeFirst() {
+        if (isEmpty()) {
+            return null;
+        }
         T item = items[first];
         items[first] = null;
-        first += 1;
+        if (first == items.length - 1) {
+            first = 0;
+        } else {
+            first += 1;
+        }
         size -= 1;
         return item;
     }
 
     /** Removes last item in ArrayDeque. */
     public T removeLast() {
+        if (isEmpty()) {
+            return null;
+        }
         T item = items[last];
-        items[last] = null;
-        last -= 1;
+        if (last == 0) {
+            last = items.length - 1;
+        } else {
+            last -= 1;
+        }
         size -= 1;
         return item;
     }
